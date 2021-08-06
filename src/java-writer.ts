@@ -1,24 +1,24 @@
 ﻿import * as elements from '@yellicode/elements';
 import * as opts from './options';
 import { CodeWriter, TextWriter } from '@yellicode/core';
-import { CSharpTypeNameProvider } from './java-type-name-provider';
-import { CSharpCommentWriter } from './comment-writer';
+import { JavaTypeNameProvider } from './java-type-name-provider';
+import { JavaCommentWriter } from './comment-writer';
 import { XmlDocUtility } from './xml-doc-utility';
 import { DefinitionBuilder } from './definition-builder';
 import { NamespaceDefinition, ClassDefinition, AccessModifier, InterfaceDefinition, EnumDefinition, EnumMemberDefinition, MethodDefinition, ParameterDefinition, PropertyDefinition, StructDefinition } from './model';
 
 /**
  * A CodeWriter for writing Java code from code generation templates. This writer can write classes, interfaces, structs and enumerations and also
- * contains functions for writing namespace blocks and using directives. The CSharpWriter is compatible with Yellicode models but can also work
+ * contains functions for writing namespace blocks and using directives. The JavaWriter is compatible with Yellicode models but can also work
  * independently.
  */
-export class CSharpWriter extends CodeWriter {
+export class JavaWriter extends CodeWriter {
     private typeNameProvider: elements.TypeNameProvider;
     private definitionBuilder: DefinitionBuilder;
-    private commentWriter: CSharpCommentWriter;
+    private commentWriter: JavaCommentWriter;
 
     /**
-     * Constructor. Creates a new CSharpWriter instance using the TextWriter and options provided.
+     * Constructor. Creates a new JavaWriter instance using the TextWriter and options provided.
      * @param writer The template's current TextWriter.
      * @param options Optional: the global options for this writer.
      */
@@ -26,9 +26,9 @@ export class CSharpWriter extends CodeWriter {
         super(writer);
         if (!options) options = {};
 
-        this.typeNameProvider = options.typeNameProvider || new CSharpTypeNameProvider();
+        this.typeNameProvider = options.typeNameProvider || new JavaTypeNameProvider();
         this.definitionBuilder = new DefinitionBuilder(this.typeNameProvider);
-        this.commentWriter = new CSharpCommentWriter(writer, options.maxCommentWidth || 100);
+        this.commentWriter = new JavaCommentWriter(writer, options.maxCommentWidth || 100);
     }
 
     /**
@@ -46,7 +46,7 @@ export class CSharpWriter extends CodeWriter {
      * Writes an indented block of code, wrapped in opening and closing brackets.
      * @param contents A callback function that writes the contents.
      */
-    public writeCodeBlock(contents: (writer: CSharpWriter) => void): this {
+    public writeCodeBlock(contents: (writer: JavaWriter) => void): this {
         this.writeLine('{');
         this.increaseIndent();
         if (contents) contents(this);
@@ -60,15 +60,15 @@ export class CSharpWriter extends CodeWriter {
      * @param definition The namespace definition. Not that an XML doc summary is not supported.
      * @param contents A callback function that writes the namespace contents.
      */
-    public writeNamespaceBlock(definition: NamespaceDefinition, contents: (writer: CSharpWriter) => void): this;
+    public writeNamespaceBlock(definition: NamespaceDefinition, contents: (writer: JavaWriter) => void): this;
     /**
      * Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets.
      * @param pack A package or model that represents the namespace.
      * @param contents A callback function that writes the namespace contents.
      * @param options An optional NamespaceOptions object.
      */
-    public writeNamespaceBlock(pack: elements.Package, contents: (writer: CSharpWriter) => void, options?: opts.NamespaceOptions): this;
-    public writeNamespaceBlock(data: any, contents: (writer: CSharpWriter) => void, options?: opts.NamespaceOptions): this {
+    public writeNamespaceBlock(pack: elements.Package, contents: (writer: JavaWriter) => void, options?: opts.NamespaceOptions): this;
+    public writeNamespaceBlock(data: any, contents: (writer: JavaWriter) => void, options?: opts.NamespaceOptions): this {
         if (!data) return this;
 
         const definition: NamespaceDefinition = (elements.isPackage(data)) ?
@@ -86,7 +86,7 @@ export class CSharpWriter extends CodeWriter {
      * @param definition The class definition.
      * @param contents A callback function that writes the class contents.
      */
-    public writeClassBlock(definition: ClassDefinition, contents: (writer: CSharpWriter) => void): this;
+    public writeClassBlock(definition: ClassDefinition, contents: (writer: JavaWriter) => void): this;
     /**
      * Writes a block of code, wrapped in a class declaration and opening and closing brackets.
      * This function does not write class members.
@@ -94,8 +94,8 @@ export class CSharpWriter extends CodeWriter {
      * @param contents A callback function that writes the class contents.
      * @param options An optional ClassOptions object.
      */
-    public writeClassBlock(cls: elements.Class, contents: (writer: CSharpWriter) => void, options?: opts.ClassOptions): this;
-    public writeClassBlock(data: any, contents: (writer: CSharpWriter) => void, options?: opts.ClassOptions): this {
+    public writeClassBlock(cls: elements.Class, contents: (writer: JavaWriter) => void, options?: opts.ClassOptions): this;
+    public writeClassBlock(data: any, contents: (writer: JavaWriter) => void, options?: opts.ClassOptions): this {
         if (!data) return this;
 
         const definition: ClassDefinition = (elements.isType(data)) ?
@@ -132,7 +132,7 @@ export class CSharpWriter extends CodeWriter {
     * @param definition The struct definition.
     * @param contents A callback function that writes the struct contents.
     */
-    public writeStructBlock(definition: StructDefinition, contents: (writer: CSharpWriter) => void): this;
+    public writeStructBlock(definition: StructDefinition, contents: (writer: JavaWriter) => void): this;
     /**
      * Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
      * This function does not write struct members.
@@ -140,8 +140,8 @@ export class CSharpWriter extends CodeWriter {
      * @param contents A callback function that writes the struct contents.
      * @param options An optional StructOptions object.
      */
-    public writeStructBlock(cls: elements.Type, contents: (writer: CSharpWriter) => void, options?: opts.StructOptions): this;
-    public writeStructBlock(data: any, contents: (writer: CSharpWriter) => void, options?: opts.StructOptions): this {
+    public writeStructBlock(cls: elements.Type, contents: (writer: JavaWriter) => void, options?: opts.StructOptions): this;
+    public writeStructBlock(data: any, contents: (writer: JavaWriter) => void, options?: opts.StructOptions): this {
         if (!data) return this;
 
         const definition: StructDefinition = (elements.isType(data)) ?
@@ -170,7 +170,7 @@ export class CSharpWriter extends CodeWriter {
      * @param definition The interface definition.
      * @param contents  A callback function that writes the interface contents.
      */
-    public writeInterfaceBlock(definition: InterfaceDefinition, contents: (writer: CSharpWriter) => void): this;
+    public writeInterfaceBlock(definition: InterfaceDefinition, contents: (writer: JavaWriter) => void): this;
     /**
      * Writes a block of code, wrapped in an interface declaration and opening and closing brackets.
      * This function does not write interface members.
@@ -178,8 +178,8 @@ export class CSharpWriter extends CodeWriter {
      * @param contents A callback function that writes the interface contents.
      * @param options An optional InterfaceOptions object.
      */
-    public writeInterfaceBlock(iface: elements.Interface, contents: (writer: CSharpWriter) => void, options?: opts.InterfaceOptions): this;
-    public writeInterfaceBlock(data: any, contents: (writer: CSharpWriter) => void, options?: opts.InterfaceOptions): this {
+    public writeInterfaceBlock(iface: elements.Interface, contents: (writer: JavaWriter) => void, options?: opts.InterfaceOptions): this;
+    public writeInterfaceBlock(data: any, contents: (writer: JavaWriter) => void, options?: opts.InterfaceOptions): this {
         if (!data) return this;
 
         const definition: InterfaceDefinition = (elements.isType(data)) ?
@@ -209,7 +209,7 @@ export class CSharpWriter extends CodeWriter {
      * @param definition The enumeration definition.
      * @param contents A callback function that writes the enumeration contents.
      */
-    public writeEnumerationBlock(definition: EnumDefinition, contents: (writer: CSharpWriter) => void): this
+    public writeEnumerationBlock(definition: EnumDefinition, contents: (writer: JavaWriter) => void): this
     /**
     * Writes a block of code, wrapped in an enum declaration and opening and closing brackets.
     * This function does not write enumeration members. Use the writeEnumMember function
@@ -218,8 +218,8 @@ export class CSharpWriter extends CodeWriter {
     * @param contents A callback function that writes the enumeration contents.
     * @param options An optional EnumerationOptions object.
     */
-    public writeEnumerationBlock(enumeration: elements.Enumeration, contents: (writer: CSharpWriter) => void, options?: opts.EnumOptions): this
-    public writeEnumerationBlock(data: any, contents: (writer: CSharpWriter) => void, options?: opts.EnumOptions): this {
+    public writeEnumerationBlock(enumeration: elements.Enumeration, contents: (writer: JavaWriter) => void, options?: opts.EnumOptions): this
+    public writeEnumerationBlock(data: any, contents: (writer: JavaWriter) => void, options?: opts.EnumOptions): this {
         if (!data) return this;
 
         const definition: EnumDefinition = (elements.isType(data)) ?
@@ -370,7 +370,7 @@ export class CSharpWriter extends CodeWriter {
     * @param contents A callback function that writes the operation contents. This callback will not be invoked
     * if the method is abstract.
      */
-    public writeMethodBlock(method: MethodDefinition, contents: (writer: CSharpWriter) => void): this
+    public writeMethodBlock(method: MethodDefinition, contents: (writer: JavaWriter) => void): this
     /**
     * Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
     * @param operation The operation for which to write the method.
@@ -378,8 +378,8 @@ export class CSharpWriter extends CodeWriter {
     * if the method is abstract.
     * @param options An optional MethodOptions object.
     */
-    public writeMethodBlock(operation: elements.Operation, contents: (writer: CSharpWriter) => void, options?: opts.MethodOptions): this
-    public writeMethodBlock(data: any, contents: (writer: CSharpWriter) => void, options?: opts.MethodOptions): this {
+    public writeMethodBlock(operation: elements.Operation, contents: (writer: JavaWriter) => void, options?: opts.MethodOptions): this
+    public writeMethodBlock(data: any, contents: (writer: JavaWriter) => void, options?: opts.MethodOptions): this {
         if (!data) return this;
 
         const definition: MethodDefinition = (elements.isOperation(data)) ?
@@ -642,7 +642,7 @@ export class CSharpWriter extends CodeWriter {
      * Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
      * @deprecated Use the writeMethodBlock() function instead.
      */
-    public writeClassMethodBlock(operation: elements.Operation, contents: (writer: CSharpWriter) => void, options?: opts.MethodOptions): this {
+    public writeClassMethodBlock(operation: elements.Operation, contents: (writer: JavaWriter) => void, options?: opts.MethodOptions): this {
         console.warn('writeClassMethodBlock is deprecated. Use the writeMethodBlock() function instead. ');
         this.writeMethodBlock(operation, contents, options);
         return this;

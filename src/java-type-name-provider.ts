@@ -1,6 +1,6 @@
 ﻿import * as elements from '@yellicode/elements';
 
-export class CSharpTypeNameProvider extends elements.DefaultTypeNameProvider {
+export class JavaTypeNameProvider extends elements.DefaultTypeNameProvider {
     protected /*override*/ getTypeNameForType(type: elements.Type | null, isDataType: boolean): string | null {
         if (!type) return null;
 
@@ -16,7 +16,7 @@ export class CSharpTypeNameProvider extends elements.DefaultTypeNameProvider {
     }
 
     public static canBeNullable(typedElement: elements.TypedElement, csTypeName: string): boolean {
-        if (!typedElement || !csTypeName) 
+        if (!typedElement || !csTypeName)
             return false;
 
         // A collection cannot be nullable
@@ -24,7 +24,7 @@ export class CSharpTypeNameProvider extends elements.DefaultTypeNameProvider {
             return false;
         }
 
-        // Check the mapped type name (it could come from a custom TypeNameProvider) 
+        // Check the mapped type name (it could come from a custom TypeNameProvider)
         switch (csTypeName) { // the following cannot be nullable:
             case 'string':
             case 'System.String':
@@ -37,6 +37,6 @@ export class CSharpTypeNameProvider extends elements.DefaultTypeNameProvider {
         const type = typedElement.type;
         if (!type) return false;
 
-        return elements.isEnumeration(type) || elements.isDataType(type); // isDataType includes PrimitiveType      
-    }   
+        return elements.isEnumeration(type) || elements.isDataType(type); // isDataType includes PrimitiveType
+    }
 }

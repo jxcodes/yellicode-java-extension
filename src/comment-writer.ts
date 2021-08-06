@@ -1,6 +1,6 @@
 import { TextWriter, CodeWriterUtility } from '@yellicode/core';
 
-export class CSharpCommentWriter {
+export class JavaCommentWriter {
 
     constructor(private writer: TextWriter, private maxCommentWidth: number) {
 

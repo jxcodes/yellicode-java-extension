@@ -2,8 +2,8 @@
 * [ClassDefinition](#class-definition) interface
 * [ClassOptions](#class-options) interface
 * [CollectionType](#collection-type) enumeration
-* [CSharpTypeNameProvider](#c-sharp-type-name-provider) class
-* [CSharpWriter](#c-sharp-writer) class
+* [JavaTypeNameProvider](#c-sharp-type-name-provider) class
+* [JavaWriter](#c-sharp-writer) class
 * [CSReservedKeywordTransform](#cs-reserved-keyword-transform) class
 * [DefinitionBase](#definition-base) interface
 * [EnumDefinition](#enum-definition) interface
@@ -41,19 +41,19 @@ array will be written on a new line. This field is optional.
 ### ClassDefinition.accessModifier: any
 Gets the type's access modifier. By default, no access modifier will be written.
 ### ClassDefinition.isPartial: boolean
-Indicates whether the type should be written with the 'partial' keyword. 
+Indicates whether the type should be written with the 'partial' keyword.
 The default value is false.
 ### ClassDefinition.implements: string
-Contains the names of the interfaces that the class should implement. 
+Contains the names of the interfaces that the class should implement.
 This field is optional.
 ### ClassDefinition.inherits: string
-Contains the names of the classes from which the class should inherit. 
+Contains the names of the classes from which the class should inherit.
 This field is optional.
 ### ClassDefinition.isAbstract: boolean
-Indicates whether the class should be abstract. 
+Indicates whether the class should be abstract.
 The default value is false.
 ### ClassDefinition.methods: MethodDefinition
-Gets the class methods. 
+Gets the class methods.
 ### ClassDefinition.properties: PropertyDefinition
 Gets the class properties.
 
@@ -66,7 +66,7 @@ Any additional interface names that the class should implement.
 ### ClassOptions.inherits: string
 Any additional class names that the class should inherit from.
 ### ClassOptions.isAbstract: boolean
-Indicates if the class should be made abstract. 
+Indicates if the class should be made abstract.
 By default, the value of the 'Abstract' class setting in the model is used.
 ### ClassOptions.isPartial: boolean
 Indicates if the class must be prefixed with the "partial" keyword.
@@ -78,29 +78,29 @@ Enumerates the possible collection types to generated for properties and paramet
 * IEnumerable
 * IList
 
-## <a name="c-sharp-type-name-provider"></a> CSharpTypeNameProvider class
+## <a name="c-sharp-type-name-provider"></a> JavaTypeNameProvider class
 
-### CSharpTypeNameProvider.canBeNullable(typedElement, csTypeName) : boolean
+### JavaTypeNameProvider.canBeNullable(typedElement, csTypeName) : boolean
 * typedElement: TypedElement
 * csTypeName: string
-### CSharpTypeNameProvider.getTypeNameForType(type, isDataType) : string
+### JavaTypeNameProvider.getTypeNameForType(type, isDataType) : string
 * type: Type
 * isDataType: boolean
 
-## <a name="c-sharp-writer"></a> CSharpWriter class
+## <a name="c-sharp-writer"></a> JavaWriter class
 A CodeWriter for writing Java code from code generation templates. This writer can write classes, interfaces, structs and enumerations and also
-contains functions for writing namespace blocks and using directives. The CSharpWriter is compatible with Yellicode models but can also work
+contains functions for writing namespace blocks and using directives. The JavaWriter is compatible with Yellicode models but can also work
 independently.
 
-### CSharpWriter.constructor(writer, options) : CSharpWriter
-Constructor. Creates a new CSharpWriter instance using the TextWriter and options provided.
+### JavaWriter.constructor(writer, options) : JavaWriter
+Constructor. Creates a new JavaWriter instance using the TextWriter and options provided.
 * writer: object
 
    The template's current TextWriter.
 * options: [WriterOptions](#writer-options)
 
    Optional: the global options for this writer.
-### CSharpWriter.getTypeName(typedElement) : string
+### JavaWriter.getTypeName(typedElement) : string
 Gets the name of the type. This function uses the current typeNameProvider for resolving
 the type name.
 Gets the type name of the typed element. This function uses the current typeNameProvider for resolving
@@ -108,7 +108,7 @@ the type name.
 * typedElement: TypedElement
 
    Any element that has a type, such as a Property or Parameter.
-### CSharpWriter.getTypeName(type) : string
+### JavaWriter.getTypeName(type) : string
 Gets the name of the type. This function uses the current typeNameProvider for resolving
 the type name.
 Gets the type name of the typed element. This function uses the current typeNameProvider for resolving
@@ -116,125 +116,125 @@ the type name.
 * type: Type
 
    Any element that derives from Type.
-### CSharpWriter.writeAccessModifier(definition) : this
+### JavaWriter.writeAccessModifier(definition) : this
 Writes the type's access modifier to the output with a trailing whitespace.
-Writes the visibility to the output with a trailing whitespace. If the visibilty is null or 
+Writes the visibility to the output with a trailing whitespace. If the visibilty is null or
 not supported by Java, nothing will be written.
 * definition: { accessModifier?: AccessModifier; }
 
    The type definition.
-### CSharpWriter.writeAccessModifier(visibilityKind) : this
+### JavaWriter.writeAccessModifier(visibilityKind) : this
 Writes the type's access modifier to the output with a trailing whitespace.
-Writes the visibility to the output with a trailing whitespace. If the visibilty is null or 
+Writes the visibility to the output with a trailing whitespace. If the visibilty is null or
 not supported by Java, nothing will be written.
 * visibilityKind: VisibilityKind
 
    A VisibilityKind value. This value can be null.
-### CSharpWriter.writeAutoProperty(property) : this
-Writes an auto property with a getter and a setter. 
-Writes an auto property with a getter and - if the property is not ReadOnly or Derived - a setter.     
-This function can be used for both Class- and and Interface properties. 
+### JavaWriter.writeAutoProperty(property) : this
+Writes an auto property with a getter and a setter.
+Writes an auto property with a getter and - if the property is not ReadOnly or Derived - a setter.
+This function can be used for both Class- and and Interface properties.
 * property: [PropertyDefinition](#property-definition)
 
    The property definition.
-### CSharpWriter.writeAutoProperty(property, options) : this
-Writes an auto property with a getter and a setter. 
-Writes an auto property with a getter and - if the property is not ReadOnly or Derived - a setter.     
-This function can be used for both Class- and and Interface properties. 
+### JavaWriter.writeAutoProperty(property, options) : this
+Writes an auto property with a getter and a setter.
+Writes an auto property with a getter and - if the property is not ReadOnly or Derived - a setter.
+This function can be used for both Class- and and Interface properties.
 * property: Property
 * options: [PropertyOptions](#property-options)
-### CSharpWriter.writeClassBlock(definition, contents) : this
-Writes a block of code, wrapped in a class declaration and opening and closing brackets. 
+### JavaWriter.writeClassBlock(definition, contents) : this
+Writes a block of code, wrapped in a class declaration and opening and closing brackets.
 This function does not write class members.
-Writes a block of code, wrapped in a class declaration and opening and closing brackets. 
+Writes a block of code, wrapped in a class declaration and opening and closing brackets.
 This function does not write class members.
 * definition: [ClassDefinition](#class-definition)
 
    The class definition.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the class contents.
-### CSharpWriter.writeClassBlock(cls, contents, options) : this
-Writes a block of code, wrapped in a class declaration and opening and closing brackets. 
+### JavaWriter.writeClassBlock(cls, contents, options) : this
+Writes a block of code, wrapped in a class declaration and opening and closing brackets.
 This function does not write class members.
-Writes a block of code, wrapped in a class declaration and opening and closing brackets. 
+Writes a block of code, wrapped in a class declaration and opening and closing brackets.
 This function does not write class members.
 * cls: Class
 
    The class.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the class contents.
 * options: [ClassOptions](#class-options)
 
    An optional ClassOptions object.
-### CSharpWriter.writeClassMethodBlock(operation, contents, options) : this
-Writes an indented block of code, wrapped in a method declaration and opening and closing brackets. 
+### JavaWriter.writeClassMethodBlock(operation, contents, options) : this
+Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
 * operation: Operation
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 * options: [MethodOptions](#method-options)
-### CSharpWriter.writeCodeBlock(contents) : this
-Writes an indented block of code, wrapped in opening and closing brackets. 
-* contents: (writer: CSharpWriter) => void
+### JavaWriter.writeCodeBlock(contents) : this
+Writes an indented block of code, wrapped in opening and closing brackets.
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the contents.
-### CSharpWriter.writeDelimitedCommentLines(paragraph) : this
+### JavaWriter.writeDelimitedCommentLines(paragraph) : this
 * paragraph: string
-### CSharpWriter.writeDelimitedCommentParagraph(paragraph) : this
+### JavaWriter.writeDelimitedCommentParagraph(paragraph) : this
 Writes a paragraph of comments, delimited by a '\/\*' and a '\*\/', each other line starting with a '*'.
 * paragraph: string
-### CSharpWriter.writeDelimitedCommentParagraph(paragraph) : this
+### JavaWriter.writeDelimitedCommentParagraph(paragraph) : this
 Writes a paragraph of comments, delimited by a '\/\*' and a '\*\/', each other line starting with a '*'.
 * paragraph: string
 
    The paragraph to write.
-### CSharpWriter.writeEnumeration(enumeration, options) : this
-Writes a full enumeration, including members.   
-Writes a full enumeration, including members.   
+### JavaWriter.writeEnumeration(enumeration, options) : this
+Writes a full enumeration, including members.
+Writes a full enumeration, including members.
 * enumeration: Enumeration
 * options: [EnumOptions](#enum-options)
 
    An optional EnumOptions object.
-### CSharpWriter.writeEnumeration(definition) : this
-Writes a full enumeration, including members.   
-Writes a full enumeration, including members.   
+### JavaWriter.writeEnumeration(definition) : this
+Writes a full enumeration, including members.
+Writes a full enumeration, including members.
 * definition: [EnumDefinition](#enum-definition)
 
    The enumeration definition.
-### CSharpWriter.writeEnumerationBlock(enumeration, contents, options) : this
-Writes a block of code, wrapped in an enum declaration and opening and closing brackets. 
+### JavaWriter.writeEnumerationBlock(enumeration, contents, options) : this
+Writes a block of code, wrapped in an enum declaration and opening and closing brackets.
 This function does not write enumeration members. Use the writeEnumMember function
 to write each individual member or the writeEnumeration function to write the full enumeration.
-Writes a block of code, wrapped in an enum declaration and opening and closing brackets. 
+Writes a block of code, wrapped in an enum declaration and opening and closing brackets.
 This function does not write enumeration members. Use the writeEnumMember function
 to write each individual member or the writeEnumeration function to write the full enumeration.
 * enumeration: Enumeration
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the enumeration contents.
 * options: [EnumOptions](#enum-options)
 
    An optional EnumerationOptions object.
-### CSharpWriter.writeEnumerationBlock(definition, contents) : this
-Writes a block of code, wrapped in an enum declaration and opening and closing brackets. 
+### JavaWriter.writeEnumerationBlock(definition, contents) : this
+Writes a block of code, wrapped in an enum declaration and opening and closing brackets.
 This function does not write enumeration members. Use the writeEnumMember function
 to write each individual member or the writeEnumeration function to write the full enumeration.
-Writes a block of code, wrapped in an enum declaration and opening and closing brackets. 
+Writes a block of code, wrapped in an enum declaration and opening and closing brackets.
 This function does not write enumeration members. Use the writeEnumMember function
 to write each individual member or the writeEnumeration function to write the full enumeration.
 * definition: [EnumDefinition](#enum-definition)
 
    The enumeration definition.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the enumeration contents.
-### CSharpWriter.writeEnumMember(definition) : this
+### JavaWriter.writeEnumMember(definition) : this
 Writes an individual enumeration member.
 Writes an individual enumeration member.
 * definition: [EnumMemberDefinition](#enum-member-definition)
 
    The enumeration member definition.
-### CSharpWriter.writeEnumMember(literal, options, isLast) : this
+### JavaWriter.writeEnumMember(literal, options, isLast) : this
 Writes an individual enumeration member.
 Writes an individual enumeration member.
 * literal: EnumerationLiteral
@@ -246,14 +246,14 @@ Writes an individual enumeration member.
 * isLast: boolean
 
    Set to true if this is the last member of the enumeration to be written (avoiding
-a trailing comma). 
-### CSharpWriter.writeInOutParameters(params) : this
+a trailing comma).
+### JavaWriter.writeInOutParameters(params) : this
 Writes the input and output parameters of a method.
 Writes the input and output parameters (all parameters except the return parameter) of a method.
 * params: [ParameterDefinition](#parameter-definition)
 
-   The parameter definitions.   
-### CSharpWriter.writeInOutParameters(params, options) : this
+   The parameter definitions.
+### JavaWriter.writeInOutParameters(params, options) : this
 Writes the input and output parameters of a method.
 Writes the input and output parameters (all parameters except the return parameter) of a method.
 * params: Parameter
@@ -262,65 +262,65 @@ Writes the input and output parameters (all parameters except the return paramet
 * options: [MethodOptions](#method-options)
 
    An optional MethodOptions object.
-### CSharpWriter.writeInterfaceBlock(definition, contents) : this
-Writes a block of code, wrapped in an interface declaration and opening and closing brackets. 
+### JavaWriter.writeInterfaceBlock(definition, contents) : this
+Writes a block of code, wrapped in an interface declaration and opening and closing brackets.
 This function does not write interface members.
-Writes a block of code, wrapped in an interface declaration and opening and closing brackets. 
+Writes a block of code, wrapped in an interface declaration and opening and closing brackets.
 This function does not write interface members.
 * definition: [InterfaceDefinition](#interface-definition)
 
    The interface definition.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the interface contents.
-### CSharpWriter.writeInterfaceBlock(iface, contents, options) : this
-Writes a block of code, wrapped in an interface declaration and opening and closing brackets. 
+### JavaWriter.writeInterfaceBlock(iface, contents, options) : this
+Writes a block of code, wrapped in an interface declaration and opening and closing brackets.
 This function does not write interface members.
-Writes a block of code, wrapped in an interface declaration and opening and closing brackets. 
+Writes a block of code, wrapped in an interface declaration and opening and closing brackets.
 This function does not write interface members.
 * iface: Interface
 
    The interface.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the interface contents.
 * options: [InterfaceOptions](#interface-options)
 
    An optional InterfaceOptions object.
-### CSharpWriter.writeInterfaceMethod(operation, options) : this
+### JavaWriter.writeInterfaceMethod(operation, options) : this
 Writes a method declaration without a body.
 * operation: Operation
 * options: [MethodOptions](#method-options)
-### CSharpWriter.writeMethodBlock(method, contents) : this
-Writes an indented block of code, wrapped in a method declaration and opening and closing brackets. 
-Writes an indented block of code, wrapped in a method declaration and opening and closing brackets. 
+### JavaWriter.writeMethodBlock(method, contents) : this
+Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
+Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
 * method: [MethodDefinition](#method-definition)
 
    The operation for which to write the method.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the operation contents. This callback will not be invoked
 if the method is abstract.
-### CSharpWriter.writeMethodBlock(operation, contents, options) : this
-Writes an indented block of code, wrapped in a method declaration and opening and closing brackets. 
-Writes an indented block of code, wrapped in a method declaration and opening and closing brackets. 
+### JavaWriter.writeMethodBlock(operation, contents, options) : this
+Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
+Writes an indented block of code, wrapped in a method declaration and opening and closing brackets.
 * operation: Operation
 
    The operation for which to write the method.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the operation contents. This callback will not be invoked
 if the method is abstract.
 * options: [MethodOptions](#method-options)
 
    An optional MethodOptions object.
-### CSharpWriter.writeMethodDeclaration(definition) : this
+### JavaWriter.writeMethodDeclaration(definition) : this
 Writes a method declaration without a body. Use this function to generate interface methods.
 Writes a method declaration without a body. Use this function to generate interface methods.
 * definition: [MethodDefinition](#method-definition)
 
    The method definition.
-### CSharpWriter.writeMethodDeclaration(operation, options) : this
+### JavaWriter.writeMethodDeclaration(operation, options) : this
 Writes a method declaration without a body. Use this function to generate interface methods.
 Writes a method declaration without a body. Use this function to generate interface methods.
 * operation: Operation
@@ -329,28 +329,28 @@ Writes a method declaration without a body. Use this function to generate interf
 * options: [MethodOptions](#method-options)
 
    An optional MethodOptions object.
-### CSharpWriter.writeNamespaceBlock(definition, contents) : this
-Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets. 
-Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets. 
+### JavaWriter.writeNamespaceBlock(definition, contents) : this
+Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets.
+Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets.
 * definition: [NamespaceDefinition](#namespace-definition)
 
-   The namespace definition. Not that an XML doc summary is not supported. 
-* contents: (writer: CSharpWriter) => void
+   The namespace definition. Not that an XML doc summary is not supported.
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the namespace contents.
-### CSharpWriter.writeNamespaceBlock(pack, contents, options) : this
-Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets. 
-Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets. 
+### JavaWriter.writeNamespaceBlock(pack, contents, options) : this
+Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets.
+Writes an indented block of code, wrapped in a namespace declaration and opening and closing brackets.
 * pack: Package
 
    A package or model that represents the namespace.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the namespace contents.
 * options: [NamespaceOptions](#namespace-options)
 
    An optional NamespaceOptions object.
-### CSharpWriter.writePropertyBlock(property, getterContents, setterContents) : this
+### JavaWriter.writePropertyBlock(property, getterContents, setterContents) : this
 Writes a property code block using optional callback functions for writing the getter and setter contents.
 Writes a property code block using optional callback functions for writing the getter and setter contents.
 * property: [PropertyDefinition](#property-definition)
@@ -361,8 +361,8 @@ Writes a property code block using optional callback functions for writing the g
    An optional callback function that writes the getter code.
 * setterContents: () => void
 
-   An optional callback function that writes the setter code. 
-### CSharpWriter.writePropertyBlock(property, getterContents, setterContents, options) : this
+   An optional callback function that writes the setter code.
+### JavaWriter.writePropertyBlock(property, getterContents, setterContents, options) : this
 Writes a property code block using optional callback functions for writing the getter and setter contents.
 Writes a property code block using optional callback functions for writing the getter and setter contents.
 * property: Property
@@ -377,84 +377,84 @@ Writes a property code block using optional callback functions for writing the g
 * options: [PropertyOptions](#property-options)
 
    An optional PropertyOptions object.
-### CSharpWriter.writeStructBlock(definition, contents) : this
-Writes a block of code, wrapped in a struct declaration and opening and closing brackets. 
+### JavaWriter.writeStructBlock(definition, contents) : this
+Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
 This function does not write struct members.
-Writes a block of code, wrapped in a struct declaration and opening and closing brackets. 
+Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
 This function does not write struct members.
 * definition: [StructDefinition](#struct-definition)
 
    The struct definition.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the struct contents.
-### CSharpWriter.writeStructBlock(cls, contents, options) : this
-Writes a block of code, wrapped in a struct declaration and opening and closing brackets. 
+### JavaWriter.writeStructBlock(cls, contents, options) : this
+Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
 This function does not write struct members.
-Writes a block of code, wrapped in a struct declaration and opening and closing brackets. 
+Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
 This function does not write struct members.
 * cls: Type
 
    The struct type.
-* contents: (writer: CSharpWriter) => void
+* contents: (writer: JavaWriter) => void
 
    A callback function that writes the struct contents.
 * options: [StructOptions](#struct-options)
 
    An optional StructOptions object.
-### CSharpWriter.writeUsingDirectives(values) : this
+### JavaWriter.writeUsingDirectives(values) : this
 Writes 1 or more using directives, each on a new line.
 * values: string
 
    A collection of strings, typically namespace names.
-### CSharpWriter.writeXmlDocLines(lines) : this
+### JavaWriter.writeXmlDocLines(lines) : this
 Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
 * lines: string
-### CSharpWriter.writeXmlDocParagraph(paragraph) : this
-Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '. 
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+### JavaWriter.writeXmlDocParagraph(paragraph) : this
+Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
 Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
 * paragraph: string
 
    The paragraph to write.
-### CSharpWriter.writeXmlDocParagraph(paragraph) : this
-Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '. 
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+### JavaWriter.writeXmlDocParagraph(paragraph) : this
+Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
 Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
 * paragraph: string
-### CSharpWriter.writeXmlDocSummary(element) : this
+### JavaWriter.writeXmlDocSummary(element) : this
 Writes a <summary> XML doc tag from an array of string comments. Each comment will be written on a new line.
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
-Writes a <summary> XML doc tag from a string. The output will be word-wrapped to the 
+Writes a <summary> XML doc tag from a string. The output will be word-wrapped to the
 current maxCommentWith specified in the writer options.
-Writes a <summary> XML doc tag from the element's ownedComments. The output will be word-wrapped to the 
+Writes a <summary> XML doc tag from the element's ownedComments. The output will be word-wrapped to the
 current maxCommentWith specified in the writer options.
 (default: 100 characters).
 * element: Element
-### CSharpWriter.writeXmlDocSummary(paragraph) : this
+### JavaWriter.writeXmlDocSummary(paragraph) : this
 Writes a <summary> XML doc tag from an array of string comments. Each comment will be written on a new line.
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
-Writes a <summary> XML doc tag from a string. The output will be word-wrapped to the 
+Writes a <summary> XML doc tag from a string. The output will be word-wrapped to the
 current maxCommentWith specified in the writer options.
-Writes a <summary> XML doc tag from the element's ownedComments. The output will be word-wrapped to the 
+Writes a <summary> XML doc tag from the element's ownedComments. The output will be word-wrapped to the
 current maxCommentWith specified in the writer options.
 (default: 100 characters).
 * paragraph: string
-### CSharpWriter.writeXmlDocSummary(paragraph) : this
+### JavaWriter.writeXmlDocSummary(paragraph) : this
 Writes a <summary> XML doc tag from an array of string comments. Each comment will be written on a new line.
-The output will be word-wrapped to the current maxCommentWith specified in the writer options 
+The output will be word-wrapped to the current maxCommentWith specified in the writer options
 (default: 100 characters).
-Writes a <summary> XML doc tag from a string. The output will be word-wrapped to the 
+Writes a <summary> XML doc tag from a string. The output will be word-wrapped to the
 current maxCommentWith specified in the writer options.
-Writes a <summary> XML doc tag from the element's ownedComments. The output will be word-wrapped to the 
+Writes a <summary> XML doc tag from the element's ownedComments. The output will be word-wrapped to the
 current maxCommentWith specified in the writer options.
 (default: 100 characters).
 * paragraph: string
@@ -475,7 +475,7 @@ Prefixes reserved Java keywords with a "@". This applies to:
 * target: Element
 
 ## <a name="definition-base"></a> DefinitionBase interface
-The base interface for all Java definitions. 
+The base interface for all Java definitions.
 
 ### DefinitionBase.name: string
 Get or sets the name of the code element. This field is required.
@@ -517,7 +517,7 @@ array will be written on a new line. This field is optional.
 Indicates if the member is the last member of the containing enumeration.
 This value is only used to control if a delimiter is written.
 ### EnumMemberDefinition.value: integer
-Gets the numeric value of the member. 
+Gets the numeric value of the member.
 This field is optional. By default, no value will be written.
 
 ## <a name="enum-member-features"></a> EnumMemberFeatures enumeration
@@ -548,13 +548,13 @@ array will be written on a new line. This field is optional.
 ### InterfaceDefinition.accessModifier: any
 Gets the type's access modifier. By default, no access modifier will be written.
 ### InterfaceDefinition.isPartial: boolean
-Indicates whether the type should be written with the 'partial' keyword. 
+Indicates whether the type should be written with the 'partial' keyword.
 The default value is false.
 ### InterfaceDefinition.inherits: string
-Contains the names of the interfaces from which the interfaces should inherit. 
+Contains the names of the interfaces from which the interfaces should inherit.
 This field is optional.
 ### InterfaceDefinition.methods: MethodDefinition
-Gets the interface methods. 
+Gets the interface methods.
 ### InterfaceDefinition.properties: PropertyDefinition
 Gets the interface properties.
 
@@ -590,10 +590,10 @@ is ignored if the method is a static method. The default value is false.
 ### MethodDefinition.isConstructor: boolean
 Indicates if the method is a constructor. The default value is false.
 ### MethodDefinition.isPartial: boolean
-Indicates whether the method should be written with the 'partial' keyword. 
+Indicates whether the method should be written with the 'partial' keyword.
 The default value is false.
 ### MethodDefinition.isStatic: boolean
-Indicates if the method should be a static method. 
+Indicates if the method should be a static method.
 The default value is false.
 ### MethodDefinition.isVirtual: boolean
 Indicates if the method should be a virtual method. This value
@@ -625,12 +625,12 @@ Sets the collection type to be generated for parameters in case they are multi-v
 ### MethodOptions.features: MethodFeatures
 Sets the MethodFeatures. The default is MethodFeatures.All.
 ### MethodOptions.isAbstract: boolean
-Indicates if the method should be made abstract. 
+Indicates if the method should be made abstract.
 By default, the value of the 'Abstract' operation setting in the model is used.
 ### MethodOptions.isPartial: boolean
 Indicates if the method must be prefixed with the "partial" keyword.
 ### MethodOptions.isVirtual: boolean
-Indicates if the method should be made virtual. The default value is false. 
+Indicates if the method should be made virtual. The default value is false.
 
 ## <a name="namespace-definition"></a> NamespaceDefinition interface
 Represents a Java namespace.
@@ -698,7 +698,7 @@ the type specified by typeName is a nullable type. The default value is false.
 ### PropertyDefinition.isVirtual: boolean
 Indicates if the property should be a virtual property.
 ### PropertyDefinition.noGetter: boolean
-Indicates if a property getter should be omitted. By default, a getter will be written. 
+Indicates if a property getter should be omitted. By default, a getter will be written.
 ### PropertyDefinition.noSetter: boolean
 Indicates if a property setter should be omitted. By default, a setter will be written.
 ### PropertyDefinition.typeName: string
@@ -722,7 +722,7 @@ Sets the collection type to be generated for the property in case it is multi-va
 ### PropertyOptions.features: PropertyFeatures
 Defines the property features to write. The default is PropertyFeatures.All.
 ### PropertyOptions.virtual: boolean
-Indicates if the property should be made virtual. The default value is false. 
+Indicates if the property should be made virtual. The default value is false.
 
 ## <a name="struct-definition"></a> StructDefinition interface
 Represents a Java struct.
@@ -735,13 +735,13 @@ array will be written on a new line. This field is optional.
 ### StructDefinition.accessModifier: any
 Gets the type's access modifier. By default, no access modifier will be written.
 ### StructDefinition.isPartial: boolean
-Indicates whether the type should be written with the 'partial' keyword. 
+Indicates whether the type should be written with the 'partial' keyword.
 The default value is false.
 ### StructDefinition.implements: string
-Contains the names of the interfaces that the struct should implement. 
+Contains the names of the interfaces that the struct should implement.
 This field is optional.
 ### StructDefinition.methods: MethodDefinition
-Gets the struct methods. 
+Gets the struct methods.
 ### StructDefinition.properties: PropertyDefinition
 Gets the struct properties.
 
@@ -773,7 +773,7 @@ array will be written on a new line. This field is optional.
 ### TypeDefinition.accessModifier: any
 Gets the type's access modifier. By default, no access modifier will be written.
 ### TypeDefinition.isPartial: boolean
-Indicates whether the type should be written with the 'partial' keyword. 
+Indicates whether the type should be written with the 'partial' keyword.
 The default value is false.
 
 ## <a name="writer-options"></a> WriterOptions interface
@@ -782,5 +782,5 @@ The default value is false.
 The maximum width of generated documentation comments before they are word-wrapped.
 The default value is 100 characters.
 ### WriterOptions.typeNameProvider: object
-Sets an optional TypeNameProvider. By default, the CSharpTypeNameProvider is used.
+Sets an optional TypeNameProvider. By default, the JavaTypeNameProvider is used.
 

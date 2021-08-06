@@ -1,7 +1,7 @@
 {
   "name": "@yellicode/java",
   "version": "1.10.0",
-  "description": "Java extension for Yellicode - an extensible code generator.",
+  "description": "Non Official Java extension for Yellicode - an extensible code generator.",
   "keywords": [
     "code generator",
     "code generation",

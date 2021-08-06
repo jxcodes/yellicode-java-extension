@@ -7,7 +7,7 @@ export interface WriterOptions {
      */
     maxCommentWidth?: number;
     /**
-     * Sets an optional TypeNameProvider. By default, the CSharpTypeNameProvider is used.
+     * Sets an optional TypeNameProvider. By default, the JavaTypeNameProvider is used.
      */
     typeNameProvider?: TypeNameProvider;
 }

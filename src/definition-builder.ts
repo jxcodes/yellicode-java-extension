@@ -2,7 +2,7 @@ import * as elements from '@yellicode/elements';
 import * as opts from './options';
 import { ClassDefinition, InterfaceDefinition, EnumDefinition, EnumMemberDefinition, DefinitionBase, TypeDefinition, AccessModifier, NamespaceDefinition, MethodDefinition, ParameterDefinition, PropertyDefinition, StructDefinition } from './model';
 import { ParameterDirectionKind } from '@yellicode/elements';
-import { CSharpTypeNameProvider } from './java-type-name-provider';
+import { JavaTypeNameProvider } from './java-type-name-provider';
 
 export class DefinitionBuilder {
     constructor(private typeNameProvider: elements.TypeNameProvider) { }
@@ -142,7 +142,7 @@ export class DefinitionBuilder {
 
         if ((features & opts.PropertyFeatures.OptionalModifier) &&
             property.lower === 0 &&
-            CSharpTypeNameProvider.canBeNullable(property, typename)) {
+            JavaTypeNameProvider.canBeNullable(property, typename)) {
             definition.isNullable = true;
         }
 
@@ -201,7 +201,7 @@ export class DefinitionBuilder {
             const paramDefinition: ParameterDefinition = DefinitionBuilder.buildDefinitionBase<ParameterDefinition>(p, !!(features & opts.MethodFeatures.XmlDocParameters));
             paramDefinition.isOutput = p.direction === elements.ParameterDirectionKind.out;
             paramDefinition.isReference = p.direction === elements.ParameterDirectionKind.inout;
-            paramDefinition.isNullable = p.lower === 0 && CSharpTypeNameProvider.canBeNullable(p, typeName);
+            paramDefinition.isNullable = p.lower === 0 && JavaTypeNameProvider.canBeNullable(p, typeName);
             paramDefinition.typeName = typeName;
             paramDefinition.defaultValue = DefinitionBuilder.getDefaultValueString(p.defaultValue),
                 inOutParameters.push(paramDefinition);

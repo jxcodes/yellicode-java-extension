@@ -2,7 +2,8 @@
 
 # Advice
 
-Right now this is only a full copy from https://github.com/yellicode/java-extension, I'll be making the necesary updates to have a full working Java Extension for Yellicode.
+This is not an official Yellicode Java Extension, right now this is only a full copy from https://github.com/yellicode/java-extension, I'll be making the necesary updates to have a full working Java Extension for Yellicode
+
 
 
 Generate Java code using powerful TypeScript code generation templates! This [Yellicode](https://www.yellicode.com) extension lets you generate Java classes, interfaces, enumerations, structs and their members from different kinds of models, using a fully typed code writer.
