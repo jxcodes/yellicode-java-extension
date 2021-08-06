@@ -1,0 +1,36 @@
+{
+  "name": "@yellicode/java",
+  "version": "1.10.0",
+  "description": "Java extension for Yellicode - an extensible code generator.",
+  "keywords": [
+    "code generator",
+    "code generation",
+    "Java"
+  ],
+  "license": "MIT",
+  "main": "dist/bundles/java.umd.js",
+  "module": "dist/es5/java.js",
+  "es2015": "dist/es6/java.js",
+  "types": "dist/types/java.d.ts",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "github:yellicode/java-extension.git"
+  },
+  "dependencies": {
+    "@yellicode/core": "^1.2.2",
+    "@yellicode/elements": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.9.0",
+    "rollup": "^0.66.6"
+  },
+  "scripts": {
+    "build:es5": "tsc",
+    "build:es6": "tsc -m es6 -t es6 --outDir dist/es6 --declaration --declarationDir dist/types",
+    "build:umd": "rollup --config rollup.config.js",
+    "build:dist": "npm run build:es5 & npm run build:es6 & npm run build:umd",
+    "build": "npm run build:dist",
+    "prepare": "npm run build:dist"
+  }
+}
