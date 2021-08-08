@@ -7,22 +7,19 @@
     "code generation",
     "Java"
   ],
+  "author": "Jaime Cruz <jaimecruz.dev@gmail.com> (https://jaimecruz.pe/)",
   "license": "MIT",
   "main": "dist/bundles/java.umd.js",
   "module": "dist/es5/java.js",
   "es2015": "dist/es6/java.js",
   "types": "dist/types/java.d.ts",
   "sideEffects": false,
-  "repository": {
-    "type": "git",
-    "url": "github:yellicode/java-extension.git"
-  },
   "dependencies": {
+    "@yellicode/core": "^1.5.0",
     "@yellicode/elements": "^1.9.2"
   },
   "devDependencies": {
     "@types/node": "^16.4.13",
-    "@yellicode/core": "^1.5.0",
     "@yellicode/templating": "^1.8.0",
     "rollup": "^2.56.0"
   },
@@ -34,5 +31,13 @@
     "build": "npm run build:dist",
     "prepare": "npm run build:dist",
     "test": "yellicode --watch"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jxcodes/yellicode-java-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jxcodes/yellicode-java-extension/issues"
+  },
+  "homepage": "https://github.com/jxcodes/yellicode-java-extension#readme"
 }
