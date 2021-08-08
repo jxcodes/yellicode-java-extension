@@ -2,9 +2,12 @@
 docs
 examples
 src
+tests
 !dist/*/src
 tsconfig.json
 *.npmignore
 *.ts
 !*.d.ts
 rollup.config.js
+codegenconfig.json
+tsconfig.codegen.json

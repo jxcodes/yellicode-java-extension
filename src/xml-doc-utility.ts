@@ -2,10 +2,10 @@ import { ParameterDefinition, DefinitionBase, MethodDefinition } from './model';
 
 export class XmlDocUtility {
     public static getXmlDocLineForParameter(parameter: ParameterDefinition): string | null {
-        if (!parameter.xmlDocSummary) return null;
+        if (!parameter.docComment) return null;
 
-        const commentBodies = XmlDocUtility.joinCommentBodies(parameter.xmlDocSummary);
-        return `<param name=\"${parameter.name}\">${commentBodies}</param>`;       
+        const commentBodies = XmlDocUtility.joinCommentBodies(parameter.docComment);
+        return `<param name=\"${parameter.name}\">${commentBodies}</param>`;
     }
 
     public static getXmlDocLineForReturnParameter(method: MethodDefinition): string | null {
@@ -21,14 +21,14 @@ export class XmlDocUtility {
 
         var lines: string[] = [];
         parameters.forEach((p: ParameterDefinition) => {
-            const l = XmlDocUtility.getXmlDocLineForParameter(p);            
+            const l = XmlDocUtility.getXmlDocLineForParameter(p);
             if (l) lines.push(l);
-        });        
+        });
         return lines;
     }
 
     private static joinCommentBodies(bodies: string[]): string {
-        if (!bodies) return '';        
+        if (!bodies) return '';
         return bodies.join(' ');
     }
 }

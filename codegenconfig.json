@@ -1,0 +1,9 @@
+{
+  "templates": [
+    {
+      "templateFile": "./tests/templates/hello-world-class.template.ts"
+    }
+  ],
+  "compileTypeScript": true,
+  "typeScriptConfigFile": "./tsconfig.codegen.json"
+}
