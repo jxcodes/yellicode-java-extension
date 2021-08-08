@@ -45,6 +45,7 @@ export class JavaWriter extends CodeWriter {
       writer,
       options.maxCommentWidth || 100
     );
+    this.indentString = "  ";
   }
 
   /**
