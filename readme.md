@@ -28,17 +28,17 @@ In order to run a code generation template, you must have the CLI installed (@ye
 Open a terminal/command prompt in your working directory and install this package as a dev dependency:
 
 ```
-npm install @yellicode/java --save-dev
+npm install yellicode-java-extension --save-dev
 ```
 
-## Using the javaWriter
+## Using the JavaWriter
 
-The main class for generating Java code is the `javaWriter`. The `javaWriter` can work with 2 different model kinds as input:
+The main class for generating Java code is the `JavaWriter`. The `JavaWriter` can work with 2 different model kinds as input:
 
 - A Java code definition.
 - A [Yellicode model](https://www.yellicode.com/docs/yellicode-models).
 
-Most `javaWriter` functions have 2 overloads which can be used for each different kind of input. For example, the `writeClassBlock` function has the
+Most `JavaWriter` functions have 2 overloads which can be used for each different kind of input. For example, the `writeClassBlock` function has the
 following overloads:
 
 1. `public writeClassBlock(definition: ClassDefinition, contents: () => void): void;`
