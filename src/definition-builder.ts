@@ -398,7 +398,7 @@ export class DefinitionBuilder {
 	private static buildTypeDefinition<TDefinition extends TypeDefinition>(
 		type: elements.Type,
 		buildXmlDocSummary: boolean | undefined,
-		options: { isPartial?: boolean; inherits?: string[] }
+		options: { isPublic?: boolean; inherits?: string[] }
 	): TDefinition {
 		var definition = DefinitionBuilder.buildDefinitionBase<TDefinition>(
 			type,
