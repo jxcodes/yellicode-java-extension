@@ -2,6 +2,9 @@
   "templates": [
     {
       "templateFile": "./tests/templates/hello-world-class.template.ts"
+    },
+    {
+      "templateFile": "./tests/templates/hello-world2-class.template.ts"
     }
   ],
   "compileTypeScript": true,

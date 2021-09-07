@@ -10,15 +10,14 @@ import { isReservedKeyword } from './utils';
  * - Operation names
  * - Operation parameter names
  */
-export class CSReservedKeywordTransform extends RenamingTransform {
-    constructor(targets: RenameTargets = RenameTargets.all) {
-        super(targets);
-    }
+export class JavaReservedKeywordTransform extends RenamingTransform {
+  constructor(targets: RenameTargets = RenameTargets.all) {
+    super(targets);
+  }
 
-    protected rename(name: string, target: Element): string {
-        if (!isReservedKeyword(name))
-            return name;
+  protected rename(name: string, target: Element): string {
+    if (!isReservedKeyword(name)) return name;
 
-        return `@${name}`;
-    }
+    return `@${name}`;
+  }
 }
