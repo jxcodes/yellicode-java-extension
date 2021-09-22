@@ -45,7 +45,7 @@ export class JavaWriter extends CodeWriter {
       writer,
       options.maxCommentWidth || 100
     );
-    this.indentString = "  ";
+    this.indentString = '  ';
   }
 
   /**
@@ -186,7 +186,7 @@ export class JavaWriter extends CodeWriter {
     }
     this.write(`class ${definition.name}`);
     let hasGeneralizations = false;
-    hasGeneralizations = this.writeInherits(definition.inherits);
+    hasGeneralizations = this.writeExtends(definition.extends);
     this.writeImplements(hasGeneralizations, definition.implements);
     this.writeCodeBlock(contents);
     return this;
@@ -284,7 +284,7 @@ export class JavaWriter extends CodeWriter {
       this.write('public ');
     }
     this.write(`interface ${definition.name}`);
-    this.writeInherits(definition.inherits);
+    this.writeExtends(definition.inherits);
     this.writeEndOfLine();
     this.writeCodeBlock(contents);
     return this;
@@ -473,7 +473,7 @@ export class JavaWriter extends CodeWriter {
 
     this.write(`${definition.name}(`);
     if (definition.parameters) {
-      this.writeInOutParameters(definition.parameters);
+      this.writeParameters(definition.parameters);
     }
     this.write(');');
     this.writeEndOfLine();
@@ -537,15 +537,13 @@ export class JavaWriter extends CodeWriter {
       this.writeAccessModifier(definition); // Partial methods are implicitly private
     }
 
+    if (definition.isPublic) {
+      this.write('public ');
+    }
     if (definition.isStatic) {
       this.write('static ');
     } else if (definition.isAbstract) {
       this.write('abstract ');
-    } else if (definition.isVirtual) {
-      this.write('virtual ');
-    }
-    if (definition.isPublic) {
-      this.write('public ');
     }
     // Write the return type
     if (!definition.isConstructor) {
@@ -555,7 +553,7 @@ export class JavaWriter extends CodeWriter {
     }
     this.write(`${definition.name}(`);
     if (definition.parameters) {
-      this.writeInOutParameters(definition.parameters);
+      this.writeParameters(definition.parameters);
     }
     this.write(')');
     if (definition.isAbstract) {
@@ -566,22 +564,59 @@ export class JavaWriter extends CodeWriter {
     }
     return this;
   }
-
   /**
-   * Writes the input and output parameters of a method.
+   * Writes a setter
+   * @param param
+   * @param methodName Method name without the set prefix
+   */
+  public writeSetterMethod(param: ParameterDefinition, methodName?: string) {
+    if (!methodName) {
+      methodName = param.name.replace(/^.{1}/, (letter) =>
+        letter.toLocaleUpperCase()
+      );
+    }
+    this.writeLine(
+      `public void set${methodName}(${param.typeName} ${param.name}) {`
+    );
+    this.increaseIndent();
+    this.writeLine(`this.${param.name} = ${param.name};`);
+    this.decreaseIndent();
+    this.writeLine(`}`);
+  }
+  /**
+   * Writes a setter
+   * @param param
+   * @param methodName Method name without the set prefix
+   */
+  public writeGetterMethod(param: ParameterDefinition, methodName?: string) {
+    if (!methodName) {
+      methodName = param.name.replace(/^.{1}/, (letter) =>
+        letter.toLocaleUpperCase()
+      );
+    }
+    this.writeLine(
+      `public ${param.typeName} get${methodName}() {`
+    );
+    this.increaseIndent();
+    this.writeLine(`return this.${param.name};`);
+    this.decreaseIndent();
+    this.writeLine(`}`);
+  }
+  /**
+   * Writes the parameters of a method.
    * @param params The parameter definitions.
    */
-  public writeInOutParameters(params: ParameterDefinition[]): this;
+  public writeParameters(params: ParameterDefinition[]): this;
   /**
-   * Writes the input and output parameters (all parameters except the return parameter) of a method.
+   * Writes the parameters (all parameters except the return parameter) of a method.
    * @param params A collection of parameters.
    * @param options An optional MethodOptions object.
    */
-  public writeInOutParameters(
+  public writeParameters(
     params: elements.Parameter[],
     options?: opts.MethodOptions
   ): this;
-  public writeInOutParameters(data: any, options?: opts.MethodOptions): this {
+  public writeParameters(data: any, options?: opts.MethodOptions): this {
     if (!data || !data.length)
       // without at least 1 element, we cannot determine the type
       return this;
@@ -601,11 +636,6 @@ export class JavaWriter extends CodeWriter {
     definitions.forEach((p) => {
       if (i > 0) {
         this.write(', ');
-      }
-      if (p.isOutput) {
-        this.write('out ');
-      } else if (p.isReference) {
-        this.write('ref '); // The ref keyword can be used for both value- and reference types
       }
       this.write(p.typeName);
       if (p.isNullable) {
@@ -862,11 +892,11 @@ export class JavaWriter extends CodeWriter {
     });
   }
 
-  private writeInherits(inherits?: string[]): boolean {
-    if (!inherits || !inherits.length) return false;
+  private writeExtends(ext?: string[]): boolean {
+    if (!ext || !ext.length) return false;
 
-    this.write(' : ');
-    this.joinWrite(inherits, ', ', (name) => name);
+    this.write(' extends ');
+    this.joinWrite(ext, ', ', (name) => name);
     return true;
   }
 
@@ -879,5 +909,14 @@ export class JavaWriter extends CodeWriter {
     this.write(hasGeneralizations ? ', ' : ' : ');
     this.joinWrite(impl, ', ', (name) => name);
     return true;
+  }
+  /**
+   *
+   * @param classList The class list to imported
+   */
+  public writeImports(classList: string[]) {
+    classList.forEach((cls) => {
+      this.writeLine(cls ? `import ${cls};` : '');
+    });
   }
 }

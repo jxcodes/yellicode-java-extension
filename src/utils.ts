@@ -77,7 +77,18 @@ const reservedKeywords = [
   'volatile',
   'while',
 ];
-const javaTypes = ['String', 'Boolean', 'int'];
+// https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
+const javaPrimitiveTypes = [
+  'byte',
+  'short',
+  'int',
+  'long',
+  'float',
+  'double',
+  'boolean',
+  'char',
+];
+const javaClassTypes = ['String', 'Boolean', 'Integer', 'Long', 'Date'];
 /**
  * Returns true if the input string is a reserved Java keyword.
  * @param input Any input string to check.
@@ -90,7 +101,9 @@ export function isReservedKeyword(input: string): boolean {
 export function isValidJavaType(input: string): boolean {
   if (!input) return false;
 
-  return javaTypes.indexOf(input) >= 0;
+  return (
+    javaPrimitiveTypes.indexOf(input) >= 0 || javaClassTypes.indexOf(input) >= 0
+  );
 }
 export function getCapitalezedCamelCase(str: string): string {
   if (!str) {

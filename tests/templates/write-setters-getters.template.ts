@@ -3,10 +3,10 @@ import { Generator } from '@yellicode/templating';
 import { JavaWriter, ClassDefinition } from '../../src/java';
 
 Generator.generate(
-  { outputFile: '../code/Persona.java' },
+  { outputFile: '../code/Person.java' },
   (output: TextWriter) => {
     const classDefinition: ClassDefinition = {
-      name: 'Persona',
+      name: 'Person',
       accessModifier: 'public',
       docComment: [
         'Nueva clase generada con yellicode, representa una persona',
@@ -17,18 +17,17 @@ Generator.generate(
           typeName: 'String',
           accessModifier: 'private',
           docComment: ['Nombre de la persona'],
-          isStatic: true,
           defaultValue: 'Pepe',
         },
         {
           name: 'apellido',
           typeName: 'String',
-          accessModifier: 'public',
+          accessModifier: 'private',
         },
         {
           name: 'edad',
           typeName: 'Integer',
-          accessModifier: 'public',
+          accessModifier: 'private',
         },
       ],
     };
@@ -42,10 +41,17 @@ Generator.generate(
         java.writeProperty(p);
         java.writeLine();
       });
-      // Main method
-      java.writeMainMethod(() => {
-        java.writeLine('System.out.println(Persona.nombre);');
-      });
+      // Write setters
+      java.writeSetterMethod({ name: 'nombre', typeName: 'String' });
+      java.writeSetterMethod({ name: 'apellido', typeName: 'String' });
+      java.writeSetterMethod({ name: 'edad', typeName: 'Integer' });
+      // Write getters
+      java.writeGetterMethod({ name: 'nombre', typeName: 'String' });
+      java.writeGetterMethod({ name: 'apellido', typeName: 'String' });
+      //
+      java.writeGetterMethod({ name: 'edad', typeName: 'Integer' });
+      java.writeGetterMethod({ name: 'nEdad', typeName: 'Integer' });
+      java.writeGetterMethod({ name: 'edad', typeName: 'Integer' }, 'nEdad');
     });
   }
 );

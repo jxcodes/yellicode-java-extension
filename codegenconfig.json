@@ -5,6 +5,9 @@
     },
     {
       "templateFile": "./tests/templates/hello-world2-class.template.ts"
+    },
+    {
+      "templateFile": "./tests/templates/write-setters-getters.template.ts"
     }
   ],
   "compileTypeScript": true,

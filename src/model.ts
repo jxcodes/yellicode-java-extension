@@ -90,10 +90,10 @@ export interface ClassDefinition extends TypeDefinition {
    */
   implements?: string[];
   /**
-   * Contains the names of the classes from which the class should inherit.
+   * Contains the names of the classes from which the class should extend.
    * This field is optional.
    */
-  inherits?: string[];
+  extends?: string[];
   /**
    * Gets the class properties.
    */
@@ -212,10 +212,6 @@ export interface ParameterDefinition extends DefinitionBase {
    * the collection must be part of the name (e.g. 'List<string>').
    */
   typeName: string;
-  /**
-   * Indicates if the parameter is an output parameter. The default value is false.
-   */
-  isOutput?: boolean;
   /**
    * Indicates if the parameter value should be passed by reference. The default value is false.
    */

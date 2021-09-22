@@ -9,7 +9,7 @@ export class JavaTypeNameProvider extends elements.DefaultTypeNameProvider {
     if (!type) return null;
 
     if (isDataType) {
-      if (elements.isPrimitiveBoolean(type)) return 'Boolean';
+      if (elements.isPrimitiveBoolean(type)) return 'boolean';
       if (elements.isPrimitiveInteger(type)) return 'int';
       if (elements.isPrimitiveReal(type)) return 'double'; // By default, a real numeric literal on the right side of the assignment operator is treated as double (https://msdn.microsoft.com/en-us/library/b1e65aza.aspx)
       if (elements.isPrimitiveString(type)) return 'String';
