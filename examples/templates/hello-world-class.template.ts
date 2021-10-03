@@ -3,7 +3,7 @@ import { Generator } from '@yellicode/templating';
 import { JavaWriter, ClassDefinition } from '../../src/java';
 
 Generator.generate(
-  { outputFile: '../code/HelloWold.java' },
+  { outputFile: '../out/HelloWold.java' },
   (output: TextWriter) => {
     const classDefinition: ClassDefinition = {
       name: 'HelloWold',

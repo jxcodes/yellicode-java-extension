@@ -1,6 +1,6 @@
 {
   "name": "yellicode-java-extension",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Non Official Java extension for Yellicode - an extensible code generator.",
   "keywords": [
     "code generator",

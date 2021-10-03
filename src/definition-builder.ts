@@ -12,7 +12,6 @@ import {
   MethodDefinition,
   ParameterDefinition,
   PropertyDefinition,
-  StructDefinition,
 } from './model';
 import { ParameterDirectionKind } from '@yellicode/elements';
 import { JavaTypeNameProvider } from './java-type-name-provider';
@@ -58,10 +57,17 @@ export class DefinitionBuilder {
     );
 
     // Build the class-specific definition
-    definition.extends = DefinitionBuilder.buildInherits(
-      type,
-      options.inherits
-    );
+    const addInherist = options.extends ? [options.extends] : undefined;
+    const exts = DefinitionBuilder.buildInherits(type, addInherist);
+    // When multiple extends only the first is used
+    if (exts && exts?.length > 1) {
+      console.warn(
+        `Java only allows inheritance from  a sigle class, many extends detected: (${exts.join(
+          ', '
+        )}) for class: ${type.name}, only ${exts[0]} will be used.`
+      );
+    }
+    definition.extends = exts ? exts[0] : undefined;
     definition.implements = DefinitionBuilder.buildImplements(
       type,
       options.implements
@@ -70,32 +76,6 @@ export class DefinitionBuilder {
       definition.isStatic = options.isStatic;
       definition.isAbstract = type.isAbstract || options.isAbstract;
     }
-    return definition;
-  }
-
-  public buildStructDefinition(
-    type: elements.Type,
-    options?: opts.StructOptions
-  ): StructDefinition {
-    // Initialize options and features
-    if (!options) options = {};
-    const features =
-      options.features === undefined
-        ? opts.StructFeatures.All
-        : options.features;
-
-    // Build the base definition
-    const definition = DefinitionBuilder.buildTypeDefinition<StructDefinition>(
-      type,
-      !!(features & opts.StructFeatures.XmlDocSummary),
-      options
-    );
-
-    // Build the struct-specific definition
-    definition.implements = DefinitionBuilder.buildImplements(
-      type,
-      options.implements
-    );
     return definition;
   }
 
@@ -119,10 +99,7 @@ export class DefinitionBuilder {
       );
 
     // Build the interface-specific definition
-    definition.inherits = DefinitionBuilder.buildInherits(
-      type,
-      options.inherits
-    );
+    definition.extends = DefinitionBuilder.buildInherits(type, options.extends);
 
     return definition;
   }
@@ -274,9 +251,7 @@ export class DefinitionBuilder {
     definition.isPublic = options.isPublic;
 
     if (!operation.isConstructor) {
-      definition.isAbstract =
-        options.isAbstract || (!options.isVirtual && operation.isAbstract);
-      definition.isVirtual = options.isVirtual;
+      definition.isAbstract = options.isAbstract;
     }
     if (!ownerIsInterface)
       definition.accessModifier = DefinitionBuilder.getAccessModifierString(
@@ -331,8 +306,6 @@ export class DefinitionBuilder {
           p,
           !!(features & opts.MethodFeatures.XmlDocParameters)
         );
-      paramDefinition.isReference =
-        p.direction === elements.ParameterDirectionKind.inout;
       paramDefinition.isNullable =
         p.lower === 0 && JavaTypeNameProvider.canBeNullable(p, typeName);
       paramDefinition.typeName = typeName;
@@ -396,7 +369,7 @@ export class DefinitionBuilder {
   private static buildTypeDefinition<TDefinition extends TypeDefinition>(
     type: elements.Type,
     buildXmlDocSummary: boolean | undefined,
-    options: { isPublic?: boolean; inherits?: string[] }
+    options: { isPublic?: boolean; extends?: string | string[] }
   ): TDefinition {
     var definition = DefinitionBuilder.buildDefinitionBase<TDefinition>(
       type,

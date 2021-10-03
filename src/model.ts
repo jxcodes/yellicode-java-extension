@@ -2,7 +2,17 @@
  * Enumerates the valid Java access modifiers.
  */
 export type AccessModifier = 'public' | 'private' | 'protected' | 'default';
-
+/**
+ * Enumerates the valid Java access modifiers.
+ */
+export type NonAccessModifier =
+  | 'static'
+  | 'final'
+  | 'abstract'
+  | 'synchronized'
+  | 'transient'
+  | 'volatile'
+  | 'native';
 /**
  * The base interface for all Java definitions.
  */
@@ -52,25 +62,6 @@ export interface TypeDefinition extends DefinitionBase {
 }
 
 /**
- * Represents a Java struct.
- */
-export interface StructDefinition extends TypeDefinition {
-  /**
-   * Contains the names of the interfaces that the struct should implement.
-   * This field is optional.
-   */
-  implements?: string[];
-  /**
-   * Gets the struct properties.
-   */
-  properties?: PropertyDefinition[];
-  /**
-   * Gets the struct methods.
-   */
-  methods?: MethodDefinition[];
-}
-
-/**
  * Represents a Java class.
  */
 export interface ClassDefinition extends TypeDefinition {
@@ -90,10 +81,10 @@ export interface ClassDefinition extends TypeDefinition {
    */
   implements?: string[];
   /**
-   * Contains the names of the classes from which the class should extend.
+   * Contains the names of the class from which the class should extend.
    * This field is optional.
    */
-  extends?: string[];
+  extends?: string;
   /**
    * Gets the class properties.
    */
@@ -112,7 +103,7 @@ export interface InterfaceDefinition extends TypeDefinition {
    * Contains the names of the interfaces from which the interfaces should inherit.
    * This field is optional.
    */
-  inherits?: string[];
+  extends?: string[];
   /**
    * Gets the interface properties.
    */
@@ -178,6 +169,10 @@ export interface MethodDefinition extends DefinitionBase {
    */
   accessModifier?: AccessModifier;
   /**
+   * Gets the method's  non-access modifier. By default, any non-access modifier will be written.
+   */
+  nonAccessModifier?: NonAccessModifier;
+  /**
    * Indicates if the method should be a static method.
    * The default value is false.
    */
@@ -187,11 +182,6 @@ export interface MethodDefinition extends DefinitionBase {
    * is ignored if the method is a static method. The default value is false.
    */
   isAbstract?: boolean;
-  /**
-   * Indicates if the method should be a virtual method. This value
-   * is ignored if the method is a static or abstract method. The default value is false.
-   */
-  isVirtual?: boolean;
   /**
    * Indicates if the method is a constructor. The default value is false.
    */
@@ -212,10 +202,6 @@ export interface ParameterDefinition extends DefinitionBase {
    * the collection must be part of the name (e.g. 'List<string>').
    */
   typeName: string;
-  /**
-   * Indicates if the parameter value should be passed by reference. The default value is false.
-   */
-  isReference?: boolean;
   /**
    * Indicates if the parameter should be nullable. The caller should ensure that
    * the type specified by typeName is a nullable type. The default value is false.

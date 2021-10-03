@@ -2,12 +2,12 @@
 
 # Advice
 
-This is not an official Yellicode Java Extension, right now this is only a full copy from https://github.com/yellicode/csharp-extension, I'll be making the necesary updates to have a full working Java Extension for Yellicode
+This is not an official Yellicode Java Extension, I took the csharp-extension https://github.com/yellicode/csharp-extension as codebase, and I made some some changes to make it work. Right now it is only making some basic stuff I needed for my projects, later I'll be making progresive updates to have a full working Java Extension for Yellicode.
 
 
 # About Java extension for Yellicode
 
-Generate Java code using powerful TypeScript code generation templates! This [Yellicode](https://www.yellicode.com) extension lets you generate Java classes, interfaces, enumerations, structs and their members from different kinds of models, using a fully typed code writer.
+Generate Java code using powerful TypeScript code generation templates! This [Yellicode](https://www.yellicode.com) extension lets you generate Java classes, interfaces, enumerations and their members from different kinds of models, using a fully typed code writer.
 
 License: MIT
 
@@ -51,7 +51,7 @@ export interface ClassDefinition extends TypeDefinition {
   isStatic?: boolean;
   isAbstract?: boolean;
   implements?: string[];
-  inherits?: string[];
+  extends?: string;
   properties?: PropertyDefinition[];
   methods?: MethodDefinition[];
 }
@@ -62,10 +62,11 @@ configure a JSON file as model (see the [Yellicode quick start](https://www.yell
 
 The second overload accepts a [class](https://www.yellicode.com/docs/api/model/class) instance from a Yellicode model and accepts an optional `ClassOptions`
 object to control code generation (internally, the Yellicode class is transformed to a `ClassDefinition`).
-
+## Examples
+_Note: Check out the [examples directory](https://github.com/jxcodes/yellicode-java-extension/tree/main/examples) in the project repository for some working examples._ 
 ### Example using a Java code definition
 
-This sample creates a simple Java definition of a _Task_ class, which is then provided to the `JavaWriter`. You would typically create this definition from another
+This sample creates a simple Java definition of a _HelloWold_ class, which is then provided to the `JavaWriter`. You would typically create this definition from another
 structure (your own JSON model, using the 'model' parameter).
 
 ```ts
@@ -74,7 +75,7 @@ import { Generator } from '@yellicode/templating';
 import { JavaWriter, ClassDefinition } from '../../src/java';
 
 Generator.generate(
-  { outputFile: '../code/HelloWold.java' },
+  { outputFile: '../out/HelloWold.java' },
   (output: TextWriter) => {
     const classDefinition: ClassDefinition = {
       name: 'HelloWold',

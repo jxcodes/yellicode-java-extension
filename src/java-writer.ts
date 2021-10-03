@@ -1,6 +1,6 @@
 ﻿import * as elements from '@yellicode/elements';
 import * as opts from './options';
-import { CodeWriter, TextWriter } from '@yellicode/core';
+import { CodeWriter, CodeWriterUtility, TextWriter } from '@yellicode/core';
 import { JavaTypeNameProvider } from './java-type-name-provider';
 import { JavaCommentWriter } from './comment-writer';
 import { XmlDocUtility } from './xml-doc-utility';
@@ -15,8 +15,8 @@ import {
   MethodDefinition,
   ParameterDefinition,
   PropertyDefinition,
-  StructDefinition,
   FileDefinition,
+  NonAccessModifier,
 } from './model';
 
 /**
@@ -28,7 +28,7 @@ export class JavaWriter extends CodeWriter {
   private typeNameProvider: elements.TypeNameProvider;
   private definitionBuilder: DefinitionBuilder;
   private commentWriter: JavaCommentWriter;
-
+  public maxCommentWidth: number;
   /**
    * Constructor. Creates a new JavaWriter instance using the TextWriter and options provided.
    * @param writer The template's current TextWriter.
@@ -41,11 +41,10 @@ export class JavaWriter extends CodeWriter {
     this.typeNameProvider =
       options.typeNameProvider || new JavaTypeNameProvider();
     this.definitionBuilder = new DefinitionBuilder(this.typeNameProvider);
-    this.commentWriter = new JavaCommentWriter(
-      writer,
-      options.maxCommentWidth || 100
-    );
+
     this.indentString = '  ';
+    this.maxCommentWidth = options.maxCommentWidth || 100;
+    this.commentWriter = new JavaCommentWriter(writer, this.maxCommentWidth);
   }
 
   /**
@@ -185,58 +184,10 @@ export class JavaWriter extends CodeWriter {
       this.write('public ');
     }
     this.write(`class ${definition.name}`);
-    let hasGeneralizations = false;
-    hasGeneralizations = this.writeExtends(definition.extends);
-    this.writeImplements(hasGeneralizations, definition.implements);
-    this.writeCodeBlock(contents);
-    return this;
-  }
-
-  /**
-   * Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
-   * This function does not write struct members.
-   * @param definition The struct definition.
-   * @param contents A callback function that writes the struct contents.
-   */
-  public writeStructBlock(
-    definition: StructDefinition,
-    contents: (writer: JavaWriter) => void
-  ): this;
-  /**
-   * Writes a block of code, wrapped in a struct declaration and opening and closing brackets.
-   * This function does not write struct members.
-   * @param cls The struct type.
-   * @param contents A callback function that writes the struct contents.
-   * @param options An optional StructOptions object.
-   */
-  public writeStructBlock(
-    cls: elements.Type,
-    contents: (writer: JavaWriter) => void,
-    options?: opts.StructOptions
-  ): this;
-  public writeStructBlock(
-    data: any,
-    contents: (writer: JavaWriter) => void,
-    options?: opts.StructOptions
-  ): this {
-    if (!data) return this;
-
-    const definition: StructDefinition = elements.isType(data)
-      ? this.definitionBuilder.buildStructDefinition(data, options)
-      : data;
-
-    if (definition.docComment) {
-      this.writeDocComment(definition.docComment);
+    if (definition.extends) {
+      this.writeExtends([definition.extends]);
     }
-
-    this.writeIndent();
-    this.writeAccessModifier(definition);
-    if (definition.isPublic) {
-      this.write('public ');
-    }
-    this.write(`struct ${definition.name}`);
-    this.writeImplements(false, definition.implements);
-    this.writeEndOfLine();
+    this.writeImplements(definition.implements);
     this.writeCodeBlock(contents);
     return this;
   }
@@ -284,7 +235,7 @@ export class JavaWriter extends CodeWriter {
       this.write('public ');
     }
     this.write(`interface ${definition.name}`);
-    this.writeExtends(definition.inherits);
+    this.writeExtends(definition.extends);
     this.writeEndOfLine();
     this.writeCodeBlock(contents);
     return this;
@@ -439,7 +390,7 @@ export class JavaWriter extends CodeWriter {
     }
 
     if (definition.parameters) {
-      this.writeXmlDocParagraph(
+      this.writeJavaDocParagraph(
         XmlDocUtility.getXmlDocLinesForInOutParameters(definition.parameters)
       );
     }
@@ -447,7 +398,7 @@ export class JavaWriter extends CodeWriter {
     const xmlDocReturns =
       XmlDocUtility.getXmlDocLineForReturnParameter(definition);
     if (xmlDocReturns) {
-      this.writeXmlDocParagraph([xmlDocReturns]);
+      this.writeJavaDocParagraph([xmlDocReturns]);
     }
 
     this.writeIndent();
@@ -455,19 +406,15 @@ export class JavaWriter extends CodeWriter {
     if (!definition.isPublic) {
       this.writeAccessModifier(definition); // Partial methods are implicitly private
     }
-
+    if (definition.isPublic) {
+      this.write('public ');
+    }
     if (definition.isStatic) {
       this.write('static ');
     } else if (definition.isAbstract) {
       this.write('abstract ');
-    } else if (definition.isVirtual) {
-      this.write('virtual ');
-    }
-    if (definition.isPublic) {
-      this.write('public ');
     }
 
-    if (definition.isPublic) this.write('void ');
     // partial methods must return void, intentional trailing white space
     else this.write(`${definition.returnTypeName || 'void'} `); // intentional trailing white space
 
@@ -519,7 +466,7 @@ export class JavaWriter extends CodeWriter {
     }
 
     if (definition.parameters) {
-      this.writeXmlDocParagraph(
+      this.writeJavaDocParagraph(
         XmlDocUtility.getXmlDocLinesForInOutParameters(definition.parameters)
       );
     }
@@ -528,29 +475,22 @@ export class JavaWriter extends CodeWriter {
       ? null
       : XmlDocUtility.getXmlDocLineForReturnParameter(definition);
     if (xmlDocReturns) {
-      this.writeXmlDocParagraph([xmlDocReturns]);
+      this.writeJavaDocParagraph([xmlDocReturns]);
     }
 
     // Start of the actual method
     this.writeIndent();
-    if (!definition.isPublic) {
-      this.writeAccessModifier(definition); // Partial methods are implicitly private
-    }
-
+    // Write the access modifier
     if (definition.isPublic) {
       this.write('public ');
+    } else {
+      this.writeAccessModifier(definition);
     }
-    if (definition.isStatic) {
-      this.write('static ');
-    } else if (definition.isAbstract) {
-      this.write('abstract ');
-    }
+    // Write the non-access modifier
+    this.writeNonAccessModifier(definition.nonAccessModifier);
     // Write the return type
-    if (!definition.isConstructor) {
-      if (definition.isPublic) this.write('void ');
-      // partial methods must return void, intentional trailing white space
-      else this.write(`${definition.returnTypeName || 'void'} `); // intentional trailing white space
-    }
+    this.write(`${definition.returnTypeName || 'void'} `); // intentional trailing white space
+
     this.write(`${definition.name}(`);
     if (definition.parameters) {
       this.writeParameters(definition.parameters);
@@ -559,7 +499,6 @@ export class JavaWriter extends CodeWriter {
     if (definition.isAbstract) {
       this.writeEndOfLine(';');
     } else {
-      this.writeEndOfLine();
       this.writeCodeBlock(contents);
     }
     return this;
@@ -594,9 +533,7 @@ export class JavaWriter extends CodeWriter {
         letter.toLocaleUpperCase()
       );
     }
-    this.writeLine(
-      `public ${param.typeName} get${methodName}() {`
-    );
+    this.writeLine(`public ${param.typeName} get${methodName}() {`);
     this.increaseIndent();
     this.writeLine(`return this.${param.name};`);
     this.decreaseIndent();
@@ -712,7 +649,23 @@ export class JavaWriter extends CodeWriter {
     this.writeWhiteSpace();
     return this;
   }
+  /**
+   * Writes the non-access modifier the output with a trailing whitespace. If the modifier is null or
+   * not supported by Java, nothing will be written.
+   * @param nonAccessModifier A NonAccessModifier value. This value can be null.
+   */
+  public writeNonAccessModifier(
+    nonAccessModifier: NonAccessModifier | undefined
+  ): this;
+  public writeNonAccessModifier(
+    nonAccessModifier: NonAccessModifier | undefined
+  ): this {
+    if (!nonAccessModifier) return this;
 
+    this.write(nonAccessModifier);
+    this.writeWhiteSpace();
+    return this;
+  }
   /**
    * Gets the name of the type. This function uses the current typeNameProvider for resolving
    * the type name.
@@ -818,40 +771,46 @@ export class JavaWriter extends CodeWriter {
    * (default: 100 characters).
    * @param line The paragraph to write.
    */
-  public writeXmlDocParagraph(paragraph: string[]): this;
+  public writeJavaDocParagraph(paragraph: string[]): this;
   /**
    * Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
    * The output will be word-wrapped to the current maxCommentWith specified in the writer options
    * (default: 100 characters).
    * @param paragraph The paragraph to write.
    */
-  public writeXmlDocParagraph(paragraph: string): this;
-  public writeXmlDocParagraph(data: any): this {
+  public writeJavaDocParagraph(paragraph: string): this;
+  public writeJavaDocParagraph(data: any): this {
     if (data == null) return this;
     let lines: string[];
 
     if (typeof data == 'string') {
       lines = [data];
     } else lines = data;
-    this.commentWriter.writeCommentLines(lines, '/// ');
+    this.writeJsDocLines(lines);
     return this;
   }
+  public writeJsDocLines(lines: string[]): this {
+    if (lines.length === 0) return this;
 
-  /**
-   * Writes a paragraph of xml doc comments, each line starting with forward slashes '/// '.
-   * @param lines
-   * @deprecated Please use writeXmlDocParagraph instead.
-   */
-  public writeXmlDocLines(lines: string[]): this {
-    console.warn(
-      'writeXmlDocLines is deprecated. Use the writeXmlDocParagraph() function instead.'
-    );
+    this.writeLine('/**');
 
-    if (lines == null) return this;
-    this.commentWriter.writeCommentLines(lines, '/// ');
+    // Split here
+    lines.forEach((line) => {
+      const lineLength = line ? line.length : 0;
+      if (this.maxCommentWidth > 0 && lineLength > this.maxCommentWidth) {
+        // See if we can split the line
+        var split: string[] = CodeWriterUtility.wordWrap(
+          line,
+          this.maxCommentWidth
+        );
+        split.forEach((s) => {
+          this.writeLine(`* ${s}`);
+        });
+      } else this.writeLine(`* ${line}`);
+    });
+    this.writeLine('*/');
     return this;
   }
-
   /**
    * Writes a paragraph of comments, delimited by a '\/\*' and a '\*\/', each other line starting with a '*'.
    * @param paragraph The paragraph to write.
@@ -900,13 +859,9 @@ export class JavaWriter extends CodeWriter {
     return true;
   }
 
-  private writeImplements(
-    hasGeneralizations: boolean,
-    impl?: string[]
-  ): boolean {
+  private writeImplements(impl?: string[]): boolean {
     if (!impl || !impl.length) return false;
-
-    this.write(hasGeneralizations ? ', ' : ' : ');
+    this.write(' implements ');
     this.joinWrite(impl, ', ', (name) => name);
     return true;
   }

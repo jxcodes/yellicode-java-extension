@@ -53,10 +53,6 @@ export interface ClassOptions {
    */
   features?: ClassFeatures;
   /**
-   * Indicates if the class must be prefixed with the "partial" keyword.
-   */
-  isPartial?: boolean;
-  /**
    * Indicates if the class should be a static class.
    * The default value is false.
    */
@@ -71,9 +67,9 @@ export interface ClassOptions {
    */
   implements?: string[];
   /**
-   * Any additional class names that the class should inherit from.
+   * Any additional class name that the class should inherit from.
    */
-  inherits?: string[];
+  extends?: string;
 }
 
 export enum StructFeatures {
@@ -111,13 +107,9 @@ export interface InterfaceOptions {
    */
   features?: InterfaceFeatures;
   /**
-   * Indicates if the interface must be prefixed with the "partial" keyword.
-   */
-  isPartial?: boolean;
-  /**
    * Any additional interface names that the interface should inherit from.
    */
-  inherits?: string[];
+  extends?: string[];
 }
 
 export enum EnumFeatures {
@@ -195,10 +187,6 @@ export interface MethodOptions {
    * Sets the collection type to be generated for parameters in case they are multi-valued. The default is ICollection.
    */
   collectionType?: CollectionType;
-  /**
-   * Indicates if the method should be made virtual. The default value is false.
-   */
-  isVirtual?: boolean;
   /**
    * Indicates if the method should be made abstract.
    * By default, the value of the 'Abstract' operation setting in the model is used.

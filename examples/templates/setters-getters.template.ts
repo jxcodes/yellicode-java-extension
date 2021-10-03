@@ -3,29 +3,26 @@ import { Generator } from '@yellicode/templating';
 import { JavaWriter, ClassDefinition } from '../../src/java';
 
 Generator.generate(
-  { outputFile: '../code/Person.java' },
+  { outputFile: '../out/Person.java' },
   (output: TextWriter) => {
     const classDefinition: ClassDefinition = {
       name: 'Person',
       accessModifier: 'public',
-      docComment: [
-        'Nueva clase generada con yellicode, representa una persona',
-      ],
+      docComment: ['The person class'],
       properties: [
         {
-          name: 'nombre',
+          name: 'name',
           typeName: 'String',
           accessModifier: 'private',
-          docComment: ['Nombre de la persona'],
           defaultValue: 'Pepe',
         },
         {
-          name: 'apellido',
+          name: 'lastName',
           typeName: 'String',
           accessModifier: 'private',
         },
         {
-          name: 'edad',
+          name: 'age',
           typeName: 'Integer',
           accessModifier: 'private',
         },
@@ -37,21 +34,23 @@ Generator.generate(
 
     java.writeClassBlock(classDefinition, () => {
       // Properties
+      java.writeLine('// Properties');
       (classDefinition.properties || []).forEach((p) => {
         java.writeProperty(p);
         java.writeLine();
       });
       // Write setters
-      java.writeSetterMethod({ name: 'nombre', typeName: 'String' });
-      java.writeSetterMethod({ name: 'apellido', typeName: 'String' });
-      java.writeSetterMethod({ name: 'edad', typeName: 'Integer' });
+      java.writeLine('// Setters');
+      (classDefinition.properties || []).forEach((p) => {
+        java.writeSetterMethod(p);
+        java.writeLine();
+      });
       // Write getters
-      java.writeGetterMethod({ name: 'nombre', typeName: 'String' });
-      java.writeGetterMethod({ name: 'apellido', typeName: 'String' });
-      //
-      java.writeGetterMethod({ name: 'edad', typeName: 'Integer' });
-      java.writeGetterMethod({ name: 'nEdad', typeName: 'Integer' });
-      java.writeGetterMethod({ name: 'edad', typeName: 'Integer' }, 'nEdad');
+      java.writeLine('// Getters');
+      (classDefinition.properties || []).forEach((p) => {
+        java.writeGetterMethod(p);
+        java.writeLine();
+      });
     });
   }
 );

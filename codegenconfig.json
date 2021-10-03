@@ -1,13 +1,16 @@
 {
   "templates": [
     {
-      "templateFile": "./tests/templates/hello-world-class.template.ts"
+      "templateFile": "./examples/templates/hello-world-class.template.ts"
     },
     {
-      "templateFile": "./tests/templates/hello-world2-class.template.ts"
+      "templateFile": "./examples/templates/setters-getters.template.ts"
     },
     {
-      "templateFile": "./tests/templates/write-setters-getters.template.ts"
+      "templateFile": "./examples/templates/animal-class.template.ts"
+    },
+    {
+      "templateFile": "./examples/templates/class-extends.template.ts"
     }
   ],
   "compileTypeScript": true,
