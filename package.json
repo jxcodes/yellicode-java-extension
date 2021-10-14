@@ -1,6 +1,6 @@
 {
   "name": "yellicode-java-extension",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "Non Official Java extension for Yellicode - an extensible code generator.",
   "keywords": [
     "code generator",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^16.4.13",
     "@yellicode/templating": "^1.8.0",
+    "fs-extra": "^10.0.0",
     "rollup": "^2.56.0"
   },
   "scripts": {
@@ -28,12 +29,7 @@
     "build:es6": "tsc -m es6 -t es6 --outDir dist/es6 --declaration --declarationDir dist/types",
     "build:umd": "rollup --config rollup.config.js",
     "build:dist": "npm run build:es5 & npm run build:es6 & npm run build:umd",
-
-    "build:local:es5": "tsc",
-    "build:local:es6": "tsc -m es6 -t es6 --outDir D:\\DevSpace/cites-peru/mm-cites-peru/node_modules/yellicode-java-extension/dist/es6 --declaration --declarationDir D:\\DevSpace/cites-peru/mm-cites-peru/node_modules/yellicode-java-extension/dist/types",
-    "build:local:umd": "rollup --config rollup.local.config.js",
-    "build:local:dist": "npm run build:local:es5 & npm run build:local:es6 & npm run build:local:umd",
-
+    "build:local:dist": "npm run build:dist & node copy-to-local.js",
     "build": "npm run build:dist",
     "prepare": "npm run build:dist",
     "test": "yellicode --watch"

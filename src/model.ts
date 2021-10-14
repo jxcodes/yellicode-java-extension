@@ -196,6 +196,9 @@ export interface MethodDefinition extends DefinitionBase {
    * The default value is false.
    */
   isDefault?: boolean;
+  /**
+   * Indicates the  exceptions that are thrown by the method.
+   */
   throws?: string[];
 }
 
