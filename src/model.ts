@@ -191,6 +191,12 @@ export interface MethodDefinition extends DefinitionBase {
    * The default value is false.
    */
   isPublic?: boolean;
+  /**
+   * Indicates whether the method should be written with the 'default' keyword.
+   * The default value is false.
+   */
+  isDefault?: boolean;
+  throws?: string[];
 }
 
 /**

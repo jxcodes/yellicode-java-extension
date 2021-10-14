@@ -236,7 +236,6 @@ export class JavaWriter extends CodeWriter {
     }
     this.write(`interface ${definition.name}`);
     this.writeExtends(definition.extends);
-    this.writeEndOfLine();
     this.writeCodeBlock(contents);
     return this;
   }
@@ -422,7 +421,12 @@ export class JavaWriter extends CodeWriter {
     if (definition.parameters) {
       this.writeParameters(definition.parameters);
     }
-    this.write(');');
+    this.write(')');
+    if (definition.throws) {
+      this.write(' throws ');
+      this.write(definition.throws.join(', '));
+    }
+    this.write(';');
     this.writeEndOfLine();
     return this;
   }
@@ -485,6 +489,10 @@ export class JavaWriter extends CodeWriter {
       this.write('public ');
     } else {
       this.writeAccessModifier(definition);
+    }
+    // Writes the default keyword if it's required
+    if (definition.isDefault) {
+      this.write('default ');
     }
     // Write the non-access modifier
     this.writeNonAccessModifier(definition.nonAccessModifier);

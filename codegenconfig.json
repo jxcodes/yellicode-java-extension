@@ -11,6 +11,9 @@
     },
     {
       "templateFile": "./examples/templates/class-extends.template.ts"
+    },
+    {
+      "templateFile": "./examples/templates/interface-declaration-example.template.ts"
     }
   ],
   "compileTypeScript": true,
