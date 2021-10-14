@@ -64,11 +64,7 @@ The second overload accepts a [class](https://www.yellicode.com/docs/api/model/c
 object to control code generation (internally, the Yellicode class is transformed to a `ClassDefinition`).
 ## Examples
 _Note: Check out the [examples directory](https://github.com/jxcodes/yellicode-java-extension/tree/main/examples) in the project repository for some working examples._ 
-### Example using a Java code definition
-
-This sample creates a simple Java definition of a _HelloWold_ class, which is then provided to the `JavaWriter`. You would typically create this definition from another
-structure (your own JSON model, using the 'model' parameter).
-
+### Generating a Class
 ```ts
 import { TextWriter } from '@yellicode/core';
 import { Generator } from '@yellicode/templating';
@@ -129,4 +125,100 @@ public class HelloWold {
   }
 }
 
+```
+
+
+
+
+
+
+
+### Generating an Interface
+```ts
+import { TextWriter } from '@yellicode/core';
+import { Generator } from '@yellicode/templating';
+import { JavaWriter, InterfaceDefinition } from '../../src/java';
+
+Generator.generate(
+  { outputFile: '../out/InterfazDeclarationExample.java' },
+  (output: TextWriter) => {
+    const ineterfaceDefinition: InterfaceDefinition = {
+      name: 'InterfazDeclarationExample',
+      accessModifier: 'public',
+      docComment: ['A fully generated Interface'],
+    };
+
+    // Java code writer
+    const java = new JavaWriter(output);
+
+    java.writeInterfaceBlock(ineterfaceDefinition, () => {
+      java.writeLine();
+      // Basic method
+      java.writeMethodDeclaration({
+        name: 'basicMethod',
+        returnTypeName: `String`,
+      });
+      java.writeLine();
+      // Whit parameters
+      java.writeMethodDeclaration({
+        name: 'withParameters',
+        returnTypeName: `String`,
+        parameters: [
+          { name: 'param1', typeName: 'String' },
+          { name: 'param2', typeName: 'Integer' },
+        ],
+      });
+      java.writeLine();
+      // Method that throws exceptions
+      java.writeMethodDeclaration({
+        name: 'withExecptions',
+        returnTypeName: `String`,
+        throws: ['Exception'],
+      });
+      java.writeLine();
+      // Method with public modifier
+      java.writeMethodDeclaration({
+        isPublic: true,
+        name: 'whitPublicModifier',
+        returnTypeName: `String`,
+      });
+      java.writeLine();
+      // Method with default implementation
+      java.writeMethodBlock(
+        {
+          isDefault: true,
+          name: 'whitDefultMethodImlementation',
+          returnTypeName: `void`,
+        },
+        () => {
+          java.writeLine('// Write your code here!');
+        }
+      );
+      java.writeLine();
+    });
+  }
+);
+```
+
+The generated Java code will look as follows:
+
+```java
+/**
+ * A fully generated Interface
+ */
+public interface InterfazDeclarationExample {
+
+  String basicMethod();
+
+  String withParameters(String param1, Integer param2);
+
+  String withExecptions() throws Exception;
+
+  public String whitPublicModifier();
+
+  default void whitDefultMethodImlementation() {
+    // Write your code here!
+  }
+
+}
 ```

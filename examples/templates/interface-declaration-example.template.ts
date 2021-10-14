@@ -15,11 +15,13 @@ Generator.generate(
     const java = new JavaWriter(output);
 
     java.writeInterfaceBlock(ineterfaceDefinition, () => {
+      java.writeLine();
       // Basic method
       java.writeMethodDeclaration({
         name: 'basicMethod',
         returnTypeName: `String`,
       });
+      java.writeLine();
       // Whit parameters
       java.writeMethodDeclaration({
         name: 'withParameters',
@@ -29,19 +31,22 @@ Generator.generate(
           { name: 'param2', typeName: 'Integer' },
         ],
       });
+      java.writeLine();
       // Method that throws exceptions
       java.writeMethodDeclaration({
         name: 'withExecptions',
         returnTypeName: `String`,
         throws: ['Exception'],
       });
+      java.writeLine();
       // Method with public modifier
       java.writeMethodDeclaration({
         isPublic: true,
         name: 'whitPublicModifier',
         returnTypeName: `String`,
       });
-      // Method with public modifier
+      java.writeLine();
+      // Method with default implementation
       java.writeMethodBlock(
         {
           isDefault: true,
@@ -52,6 +57,7 @@ Generator.generate(
           java.writeLine('// Write your code here!');
         }
       );
+      java.writeLine();
     });
   }
 );
