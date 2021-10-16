@@ -57,6 +57,18 @@ Generator.generate(
           java.writeLine('// Write your code here!');
         }
       );
+      // Method with default implementation and throws definition
+      java.writeMethodBlock(
+        {
+          isDefault: true,
+          name: 'whitDefultMethodImlementationAndThrowsEx',
+          returnTypeName: `void`,
+          throws: ['Exception'],
+        },
+        () => {
+          java.writeLine('throw new Exception("Something went wrong.");');
+        }
+      );
       java.writeLine();
     });
   }

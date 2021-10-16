@@ -14,5 +14,8 @@ public interface InterfazDeclarationExample {
   default void whitDefultMethodImlementation() {
     // Write your code here!
   }
+  default void whitDefultMethodImlementationAndThrowsEx() throws Exception {
+    throw new Exception("Something went wrong.");
+  }
 
 }

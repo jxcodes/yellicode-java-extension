@@ -504,6 +504,10 @@ export class JavaWriter extends CodeWriter {
       this.writeParameters(definition.parameters);
     }
     this.write(')');
+    if (definition.throws) {
+      this.write(' throws ');
+      this.write(definition.throws.join(', '));
+    }
     if (definition.isAbstract) {
       this.writeEndOfLine(';');
     } else {
